@@ -1,0 +1,6 @@
+@BlocedCountriesApi_HostAddress = http://localhost:5182
+
+GET {{BlocedCountriesApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

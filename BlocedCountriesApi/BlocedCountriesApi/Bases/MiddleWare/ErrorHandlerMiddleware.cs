@@ -1,0 +1,113 @@
+﻿using BlockedCountries.Bases.Behavior;
+using BlockedCountries.Bases.ResponseBases;
+using Microsoft.IdentityModel.Tokens;
+using System.Net;
+using System.Text.Json;
+
+namespace BlockedCountriesApi.Bases.MiddleWare
+{
+    public class ErrorHandlerMiddleware
+    {
+        private readonly RequestDelegate requestDelegate;
+        private readonly ILogger<ErrorHandlerMiddleware> logger;
+
+        public ErrorHandlerMiddleware(RequestDelegate requestDelegate, ILogger<ErrorHandlerMiddleware> logger)
+
+        {
+            this.requestDelegate = requestDelegate;
+            this.logger = logger;
+        }
+
+        public async Task Invoke(HttpContext context)
+        {
+
+            try
+            {
+                await requestDelegate(context);
+            }
+
+            catch (Exception error)
+            {
+                var response = context.Response;
+
+                response.ContentType = "application/json";
+                var responseModel = new Response<string> { Succeeded = false, Message = error?.Message };
+
+                switch (error)
+                {
+                    case ArgumentNullException:
+                        responseModel.Message = "Required parameter is missing";
+                        responseModel.StatusCode = HttpStatusCode.BadRequest;
+                        response.StatusCode = 400;
+                        break;
+
+
+                    case FormatException:
+                        responseModel.Message = "Invalid request data";
+                        responseModel.StatusCode = HttpStatusCode.BadRequest;
+                        response.StatusCode = 400;
+                        break;
+
+                    case TimeoutException:
+                        responseModel.Message = "Request timeout";
+                        responseModel.StatusCode = HttpStatusCode.RequestTimeout;
+                        response.StatusCode = 408;
+                        break;
+
+                    case OperationCanceledException:
+                        responseModel.Message = "Request was cancelled";
+                        responseModel.StatusCode = HttpStatusCode.BadRequest;
+                        response.StatusCode = 400;
+                        break;
+
+                    case SecurityTokenExpiredException:
+                        responseModel.Message = "Token expired";
+                        responseModel.StatusCode = HttpStatusCode.Unauthorized;
+                        response.StatusCode = 401;
+                        break;
+                    case SecurityTokenException:
+                        responseModel.Message = "Invalid token";
+                        response.StatusCode = 401;
+                        break;
+
+                    case UnauthorizedAccessException:
+                        responseModel.Message = "Unauthorized access";
+                        responseModel.StatusCode = HttpStatusCode.Unauthorized;
+                        response.StatusCode = 401;
+                        break;
+
+                    case KeyNotFoundException:
+                        responseModel.Message = "Resource not found";
+                        responseModel.StatusCode = HttpStatusCode.NotFound;
+                        response.StatusCode = 404;
+                        break;
+
+                   
+
+                    case CustomValidationExeption ex:
+                        responseModel.Message = ex.Message;
+                        responseModel.StatusCode = HttpStatusCode.UnprocessableEntity;
+                        responseModel.Errors = ex.Errors;
+                        response.StatusCode = 422;
+                        break;
+
+                    default:
+                        responseModel.Message = "Internal Server Error";
+                        responseModel.StatusCode = HttpStatusCode.InternalServerError;
+                        response.StatusCode = 500;
+                        break;
+                }
+
+                logger.LogError(error,
+      "Exception at {Method} {Path} | Query: {QueryString}",
+      context.Request.Method,
+      context.Request.Path,
+      context.Request.QueryString);
+
+                var json = JsonSerializer.Serialize(responseModel);
+                await response.WriteAsync(json);
+            }
+
+        }
+    }
+}
