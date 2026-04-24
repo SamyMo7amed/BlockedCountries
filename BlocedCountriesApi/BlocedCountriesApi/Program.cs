@@ -1,6 +1,7 @@
 using BlocedCountriesApi.Dependency;
 using BlocedCountriesApi.Models;
 using BlockedCountriesApi.Bases.MiddleWare;
+using Microsoft.OpenApi;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 builder.Services.AddDependencies();
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -20,13 +20,18 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Host.UseSerilog();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.MapOpenApi();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Blocked Countries API V1");
+   
+});
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseHttpsRedirection();

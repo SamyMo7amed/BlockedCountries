@@ -27,21 +27,29 @@ namespace BlocedCountriesApi.Features.BlockCountry.Queries.Handlers
 
         public async Task<Response<PaginatedResult<BlockedCountry>>> Handle(GetBlockedCountriesQuery request, CancellationToken cancellationToken)
         {
-            var data = await countryService.GetAllAsync();
-
-            
-            if (!string.IsNullOrWhiteSpace(request.Search))
+            try
             {
-                var search = request.Search.Trim();
+                var data = await countryService.GetAllAsync();
 
-                data = data.Where(x =>
-                    x.CountryCode.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                    x.CountryName.Contains(search, StringComparison.OrdinalIgnoreCase)
-                );
+
+                if (!string.IsNullOrWhiteSpace(request.Search))
+                {
+                    var search = request.Search.Trim();
+
+                    data = data.Where(x =>
+                        x.CountryCode.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                        x.CountryName.Contains(search, StringComparison.OrdinalIgnoreCase)
+                    );
+                }
+
+
+                return Success<PaginatedResult<BlockedCountry>>(await data.ToPaginationlist(request.PageNumber, request.PageSize));
             }
+            catch (Exception ex) {
 
+                throw;
+            }
             
-            return Success<PaginatedResult<BlockedCountry>>(await data.ToPaginationlist(request.PageNumber, request.PageSize));
         }
         #endregion
 

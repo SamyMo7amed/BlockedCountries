@@ -2,6 +2,7 @@
 using BlocedCountriesApi.Repositories.AbstractRepositories;
 using BlocedCountriesApi.Repositories.ImplementRepositories;
 using BlocedCountriesApi.Services.AbstractServices;
+using BlocedCountriesApi.Services.BackgroundServices;
 using BlocedCountriesApi.Services.ImplemntServices;
 using BlockedCountriesApi.Bases.Behavior;
 using MediatR;
@@ -18,7 +19,7 @@ namespace BlocedCountriesApi.Dependency
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidateBehavior<,>));
             services.AddMediatR(x => x.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
             services.AddSingleton<MemoryStore>();
-            services.AddSingleton<BackgroundService>();
+            services.AddHostedService<Background_Service>();
             services.AddTransient<ICountryRepository,CountryRepository>();
             services.AddTransient<ILogRepository,LogRepository>();
             services.AddTransient<ITemporaryBlock,TemporaryBlockRepository>();

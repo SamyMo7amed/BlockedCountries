@@ -34,7 +34,13 @@ namespace BlocedCountriesApi.Services.ImplemntServices
         {
             try
             {
+                if (ip=="::1"||ip=="127.0.0.1") ip = "8.8.8.8";
+
                 var url = $"https://ipapi.co/{ip}/json/";
+
+               
+                _httpClient.DefaultRequestHeaders.Add("User-Agent", "CSharp-App");
+                
 
                 var response = await _httpClient.GetAsync(url);
 

@@ -69,23 +69,30 @@ namespace BlocedCountriesApi.Features.BlockCountry.Commands.Handlers
 
         public async Task<Response<string>> Handle(TempBlockCountryCommand request, CancellationToken cancellationToken)
         {
-            var code = request.CountryCode.Trim().ToUpper();
+            try
+            {
+                var code = request.CountryCode.Trim().ToUpper();
 
 
-            if (request.BlockedMinutes < 1 || request.BlockedMinutes > 1440)
-                return BadRequest<string>("Invalid duration");
-               
+                if (request.DurationMinutes < 1 || request.DurationMinutes > 1440)
+                    return BadRequest<string>("Invalid duration");
 
-            if ( temporaryBlockService.IsTemporarilyBlocked(code))
-                return BadRequest<string>("Already temporarily blocked");
-           
 
-           
-            countryService.AddAsync(new BlockedCountry(code));
-           temporaryBlockService.AddTemporaryBlock(code,request.BlockedMinutes);
-           
+                if (temporaryBlockService.IsTemporarilyBlocked(code))
+                    return BadRequest<string>("Already temporarily blocked");
 
-            return Success<string>("Success");
+
+
+                countryService.AddAsync(new BlockedCountry(code));
+                temporaryBlockService.AddTemporaryBlock(code, request.DurationMinutes);
+
+
+                return Success<string>("Success");
+            }
+            catch (Exception ex) { 
+                
+                throw; }
+            
         }
         #endregion
 
