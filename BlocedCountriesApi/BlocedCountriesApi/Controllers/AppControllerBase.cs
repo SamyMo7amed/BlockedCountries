@@ -2,12 +2,14 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Net;
 
 namespace BlocedCountriesApi.Controllers
 {
    
     [ApiController]
+    [EnableRateLimiting("fixed")]
     public class AppControllerBase : ControllerBase
     {
         private IMediator MediatorInstanse;

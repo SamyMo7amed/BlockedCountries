@@ -6,5 +6,6 @@ namespace BlocedCountriesApi.Features.IP.Queries.Models
 {
     public class ChecklockedQueriy : IRequest<Response<bool>>
     {
+        public ChecklockedQueriy() { }
     }
 }

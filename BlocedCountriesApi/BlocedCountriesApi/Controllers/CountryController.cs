@@ -4,11 +4,12 @@ using BlockedCountriesApi.Helpers.AppMetaData;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace BlocedCountriesApi.Controllers
 {
-    [Route("api/[controller]")]
     
+    [EnableRateLimiting("fixed")]
     public class CountryController : AppControllerBase
     {
         [HttpPost(Router.Country.block)]

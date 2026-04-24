@@ -2,10 +2,11 @@
 using BlockedCountriesApi.Helpers.AppMetaData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace BlocedCountriesApi.Controllers
 {
-   
+    
     public class LogsController : AppControllerBase
     {
         [HttpGet(Router.Logs.blocked_attempts)]

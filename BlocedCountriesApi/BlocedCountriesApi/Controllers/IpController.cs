@@ -2,14 +2,16 @@
 using BlockedCountriesApi.Helpers.AppMetaData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace BlocedCountriesApi.Controllers
 {
-    
-  
+
+   
     public class IpController : AppControllerBase
     {
         [HttpGet(Router.Ip.Lookup)]
+        
         public async Task<IActionResult> Lookup([FromQuery] string? ipAddress)
         {
 

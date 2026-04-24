@@ -1,6 +1,7 @@
 using BlocedCountriesApi.Dependency;
 using BlocedCountriesApi.Models;
 using BlockedCountriesApi.Bases.MiddleWare;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.OpenApi;
 using Serilog;
 
@@ -23,6 +24,22 @@ builder.Host.UseSerilog();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("fixed", opt =>
+    {
+        opt.PermitLimit = 5;
+        opt.Window = TimeSpan.FromSeconds(10);
+    });
+
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = 429;
+        await context.HttpContext.Response.WriteAsync(
+            "The number of requests exceeds the limit, please try again later."
+        );
+    };
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,12 +47,12 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Blocked Countries API V1");
-   
+
 });
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseHttpsRedirection();
-
+app.UseRateLimiter();
 app.UseAuthorization();
 
 app.MapControllers();

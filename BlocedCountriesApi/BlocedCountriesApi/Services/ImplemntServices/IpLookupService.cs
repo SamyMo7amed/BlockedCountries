@@ -43,7 +43,12 @@ namespace BlocedCountriesApi.Services.ImplemntServices
                 
 
                 var response = await _httpClient.GetAsync(url);
+                if (response.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+                {
 
+                    _logger.LogWarning("IP API Make To Many Requestes  for {ip}", ip);
+                    return null;
+                }
                 if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogWarning("IP API failed for {ip}", ip);

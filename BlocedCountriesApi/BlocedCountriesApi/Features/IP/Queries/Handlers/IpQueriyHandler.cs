@@ -37,7 +37,7 @@ public async Task<Response<bool>> Handle(ChecklockedQueriy request, Cancellation
             var ip = _httpContext.HttpContext?.Connection?.RemoteIpAddress?.ToString();
             var userAgent = _httpContext?.HttpContext?.Request.Headers["User-Agent"].ToString() ?? "Unknown";
             var result=await _ipLookupService.LookupIpAsync(ip);
-            if (result == null) return null;
+            if (result == null) return NotFound<bool>("ToManyRequestes") ;
             var checkResult = await countryService.ExistsAsync(result.CountryCode);
             var Attempt = new BlockedAttemptLog(ip, result.CountryCode, checkResult, userAgent);
             await logService.AddAsync(Attempt);

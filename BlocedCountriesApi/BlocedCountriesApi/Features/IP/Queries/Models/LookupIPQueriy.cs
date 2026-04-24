@@ -4,8 +4,13 @@ using MediatR;
 
 namespace BlocedCountriesApi.Features.IP.Queries.Models
 {
-    public class LookupIPQueriy(string _ipAddress)  : IRequest<Response<IpApiResponse>>
+    public class LookupIPQueriy  : IRequest<Response<IpApiResponse>>
     {
-        public string ipAddress { get; set; } = _ipAddress;
+        public string ipAddress { get; set; }
+
+        public LookupIPQueriy() { }
+        public LookupIPQueriy(string ipAddress) { 
+        this.ipAddress = ipAddress; 
+        }
     }
 }
