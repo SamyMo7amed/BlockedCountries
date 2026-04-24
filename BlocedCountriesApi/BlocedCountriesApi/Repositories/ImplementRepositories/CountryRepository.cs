@@ -6,13 +6,20 @@ namespace BlocedCountriesApi.Repositories.ImplementRepositories
 {
     public class CountryRepository : ICountryRepository
     {
-        private readonly MemoryStore _store;
+
+        #region Fields 
+         private readonly MemoryStore _store;
+        #endregion
+
+        #region Constructor 
 
         public CountryRepository(MemoryStore store)
         {
             _store = store;
         }
+        #endregion
 
+        #region Methods 
         public Task AddAsync(BlockedCountry country)
         {
             _store.BlockedCountries.TryAdd(country.CountryCode, country);
@@ -40,5 +47,11 @@ namespace BlocedCountriesApi.Repositories.ImplementRepositories
         {
             return Task.FromResult(_store.BlockedCountries.ContainsKey(countryCode.ToUpper()));
         }
+        #endregion
+       
+
+        
+
+        
     }
 }

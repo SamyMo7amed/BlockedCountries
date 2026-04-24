@@ -6,12 +6,25 @@ namespace BlocedCountriesApi.Repositories.ImplementRepositories
 {
     public class LogRepository : ILogRepository
     {
-       private readonly MemoryStore _store;
 
+        #region Fields 
+         private readonly MemoryStore _store;
+        #endregion
+
+        #region Constructor 
         public LogRepository(MemoryStore store)
         {
             _store = store;
         }
+
+        #endregion
+
+        #region Methods 
+
+        #endregion
+        
+
+        
         public Task AddAsync(BlockedAttemptLog log)
         {
             _store.Logs.Add(log);

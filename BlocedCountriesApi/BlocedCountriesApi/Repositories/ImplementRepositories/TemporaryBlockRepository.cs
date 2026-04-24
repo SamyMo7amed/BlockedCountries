@@ -5,11 +5,19 @@ namespace BlocedCountriesApi.Repositories.ImplementRepositories
 {
     public class TemporaryBlockRepository : ITemporaryBlock
     {
-        private readonly MemoryStore _store;
 
+        #region Fields 
+        private readonly MemoryStore _store;
+        #endregion
+
+        #region Constructor 
         public TemporaryBlockRepository(MemoryStore store) {
         this._store = store;
         }
+
+        #endregion
+
+        #region Methods 
         public bool IsTemporarilyBlocked(string countryCode)
         {
 
@@ -43,6 +51,11 @@ namespace BlocedCountriesApi.Repositories.ImplementRepositories
 
             _store.TempBlockedCountries.TryAdd(countryCode, newBlock);
         }
+        #endregion
+        
+
+       
+        
     }
     
 }
