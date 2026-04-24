@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace BlocedCountriesApi.Services.ImplemntServices
 {
-    public class IpLookupService :IIpLookupService
+    public class IpLookupService : IIpLookupService
     {
 
         #region Fields 
@@ -20,7 +20,7 @@ namespace BlocedCountriesApi.Services.ImplemntServices
 
         public IpLookupService(
         HttpClient httpClient,
-        MemoryStore store ,
+        MemoryStore store,
         ILogger<IpLookupService> logger)
         {
             _httpClient = httpClient;
@@ -70,4 +70,9 @@ namespace BlocedCountriesApi.Services.ImplemntServices
         #endregion
 
         }
-}
+
+
+        
+
+    }
+    }

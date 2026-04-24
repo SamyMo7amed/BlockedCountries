@@ -38,6 +38,7 @@ namespace BlocedCountriesApi.Services.BackgroundServices
                     foreach (var key in expired)
                     {
                         _memoryStore.TempBlockedCountries.TryRemove(key, out _);
+                        _memoryStore.BlockedCountries.TryRemove(key, out _);
                     }
 
                     await Task.Delay(TimeSpan.FromMinutes(5));

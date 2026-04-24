@@ -1,5 +1,5 @@
-﻿using BlockedCountries.Bases.Behavior;
-using BlockedCountries.Bases.ResponseBases;
+﻿using BlockedCountriesApi.Bases.Behavior;
+using BlockedCountriesApi.Bases.ResponseBases;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
 using System.Text.Json;
